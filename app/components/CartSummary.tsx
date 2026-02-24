@@ -1,24 +1,24 @@
-import type {CartApiQueryFragment} from 'storefrontapi.generated';
-import type {CartLayout} from '~/components/CartMain';
-import {CartForm, Money, type OptimisticCart} from '@shopify/hydrogen';
-import {useEffect, useRef} from 'react';
-import {useFetcher} from 'react-router';
+import type { CartApiQueryFragment } from 'storefrontapi.generated';
+import type { CartLayout } from '~/components/CartMain';
+import { CartForm, Money, type OptimisticCart } from '@shopify/hydrogen';
+import { useEffect, useRef } from 'react';
+import { useFetcher } from 'react-router';
 
 type CartSummaryProps = {
   cart: OptimisticCart<CartApiQueryFragment | null>;
   layout: CartLayout;
 };
 
-export function CartSummary({cart, layout}: CartSummaryProps) {
+export function CartSummary({ cart, layout }: CartSummaryProps) {
   const className =
-    layout === 'page' ? 'cart-summary-page' : 'cart-summary-aside';
+    layout === 'page' ? 'cart-summary-page' : 'cart-summary-aside panel-technical';
 
   return (
     <div aria-labelledby="cart-summary" className={className}>
-      <h4>Totals</h4>
-      <dl className="cart-subtotal">
-        <dt>Subtotal</dt>
-        <dd>
+      <h3 className="technical-label" style={{ marginBottom: 'var(--space-4)' }}>SUMMARY_TOTALS</h3>
+      <dl className="cart-subtotal" style={{ borderBottom: 'var(--border-delicate)', paddingBottom: 'var(--space-4)', marginBottom: 'var(--space-4)' }}>
+        <dt style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--color-muted)' }}>SUBTOTAL</dt>
+        <dd style={{ fontFamily: 'var(--font-mono)', fontSize: '1rem' }}>
           {cart?.cost?.subtotalAmount?.amount ? (
             <Money data={cart?.cost?.subtotalAmount} />
           ) : (
@@ -33,15 +33,14 @@ export function CartSummary({cart, layout}: CartSummaryProps) {
   );
 }
 
-function CartCheckoutActions({checkoutUrl}: {checkoutUrl?: string}) {
+function CartCheckoutActions({ checkoutUrl }: { checkoutUrl?: string }) {
   if (!checkoutUrl) return null;
 
   return (
-    <div>
-      <a href={checkoutUrl} target="_self">
-        <p>Continue to Checkout &rarr;</p>
+    <div style={{ marginTop: 'var(--space-8)' }}>
+      <a href={checkoutUrl} target="_self" className="btn-minimal-white" style={{ width: '100%', textAlign: 'center' }}>
+        [ CONTINUE TO CHECKOUT ]
       </a>
-      <br />
     </div>
   );
 }
@@ -54,29 +53,26 @@ function CartDiscounts({
   const codes: string[] =
     discountCodes
       ?.filter((discount) => discount.applicable)
-      ?.map(({code}) => code) || [];
+      ?.map(({ code }) => code) || [];
 
   return (
-    <div>
-      {/* Have existing discount, display it with a remove option */}
+    <div style={{ marginBottom: 'var(--space-4)' }}>
       <dl hidden={!codes.length}>
-        <div>
-          <dt>Discount(s)</dt>
+        <div style={{ marginBottom: 'var(--space-2)' }}>
+          <dt className="technical-label" style={{ fontSize: '0.6rem' }}>ACTIVE_DISCOUNTS</dt>
           <UpdateDiscountForm>
-            <div className="cart-discount">
-              <code>{codes?.join(', ')}</code>
-              &nbsp;
-              <button type="submit" aria-label="Remove discount">
-                Remove
+            <div className="cart-discount" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+              <code style={{ background: 'rgba(255,255,255,0.05)', padding: '2px 6px', fontFamily: 'var(--font-mono)', fontSize: '0.7rem' }}>{codes?.join(', ')}</code>
+              <button type="submit" aria-label="Remove discount" className="btn-remove" style={{ marginLeft: '0' }}>
+                [ X ]
               </button>
             </div>
           </UpdateDiscountForm>
         </div>
       </dl>
 
-      {/* Show an input to apply a discount */}
       <UpdateDiscountForm discountCodes={codes}>
-        <div>
+        <div style={{ display: 'flex', gap: 'var(--space-1)' }}>
           <label htmlFor="discount-code-input" className="sr-only">
             Discount code
           </label>
@@ -84,11 +80,19 @@ function CartDiscounts({
             id="discount-code-input"
             type="text"
             name="discountCode"
-            placeholder="Discount code"
+            placeholder="DISCOUNT_CODE"
+            style={{
+              background: 'transparent',
+              border: '1px solid rgba(255,255,255,0.1)',
+              color: 'var(--color-light)',
+              padding: 'var(--space-2) var(--space-4)',
+              fontFamily: 'var(--font-mono)',
+              fontSize: '0.7rem',
+              width: '100%'
+            }}
           />
-          &nbsp;
-          <button type="submit" aria-label="Apply discount code">
-            Apply
+          <button type="submit" aria-label="Apply discount code" className="btn-qty" style={{ width: 'auto', padding: '0 var(--space-4)' }}>
+            +
           </button>
         </div>
       </UpdateDiscountForm>
@@ -122,7 +126,7 @@ function CartGiftCard({
   giftCardCodes: CartApiQueryFragment['appliedGiftCards'] | undefined;
 }) {
   const giftCardCodeInput = useRef<HTMLInputElement>(null);
-  const giftCardAddFetcher = useFetcher({key: 'gift-card-add'});
+  const giftCardAddFetcher = useFetcher({ key: 'gift-card-add' });
 
   useEffect(() => {
     if (giftCardAddFetcher.data) {
@@ -131,18 +135,16 @@ function CartGiftCard({
   }, [giftCardAddFetcher.data]);
 
   return (
-    <div>
+    <div style={{ marginBottom: 'var(--space-4)' }}>
       {giftCardCodes && giftCardCodes.length > 0 && (
-        <dl>
-          <dt>Applied Gift Card(s)</dt>
+        <dl style={{ marginBottom: 'var(--space-2)' }}>
+          <dt className="technical-label" style={{ fontSize: '0.6rem' }}>GIFT_CARDS</dt>
           {giftCardCodes.map((giftCard) => (
             <RemoveGiftCardForm key={giftCard.id} giftCardId={giftCard.id}>
-              <div className="cart-discount">
-                <code>***{giftCard.lastCharacters}</code>
-                &nbsp;
-                <Money data={giftCard.amountUsed} />
-                &nbsp;
-                <button type="submit">Remove</button>
+              <div className="cart-discount" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+                <code style={{ background: 'rgba(255,255,255,0.05)', padding: '2px 6px', fontFamily: 'var(--font-mono)', fontSize: '0.7rem' }}>***{giftCard.lastCharacters}</code>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem' }}><Money data={giftCard.amountUsed} /></span>
+                <button type="submit" className="btn-remove" style={{ marginLeft: '0' }}>[ X ]</button>
               </div>
             </RemoveGiftCardForm>
           ))}
@@ -150,16 +152,24 @@ function CartGiftCard({
       )}
 
       <AddGiftCardForm fetcherKey="gift-card-add">
-        <div>
+        <div style={{ display: 'flex', gap: 'var(--space-1)' }}>
           <input
             type="text"
             name="giftCardCode"
-            placeholder="Gift card code"
+            placeholder="GIFT_CARD"
             ref={giftCardCodeInput}
+            style={{
+              background: 'transparent',
+              border: '1px solid rgba(255,255,255,0.1)',
+              color: 'var(--color-light)',
+              padding: 'var(--space-2) var(--space-4)',
+              fontFamily: 'var(--font-mono)',
+              fontSize: '0.7rem',
+              width: '100%'
+            }}
           />
-          &nbsp;
-          <button type="submit" disabled={giftCardAddFetcher.state !== 'idle'}>
-            Apply
+          <button type="submit" disabled={giftCardAddFetcher.state !== 'idle'} className="btn-qty" style={{ width: 'auto', padding: '0 var(--space-4)' }}>
+            +
           </button>
         </div>
       </AddGiftCardForm>

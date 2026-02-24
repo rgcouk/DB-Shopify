@@ -1,12 +1,12 @@
-import {Link, useNavigate} from 'react-router';
-import {type MappedProductOptions} from '@shopify/hydrogen';
+import { Link, useNavigate } from 'react-router';
+import { type MappedProductOptions } from '@shopify/hydrogen';
 import type {
   Maybe,
   ProductOptionValueSwatch,
 } from '@shopify/hydrogen/storefront-api-types';
-import {AddToCartButton} from './AddToCartButton';
-import {useAside} from './Aside';
-import type {ProductFragment} from 'storefrontapi.generated';
+import { AddToCartButton } from './AddToCartButton';
+import { useAside } from './Aside';
+import type { ProductFragment } from 'storefrontapi.generated';
 
 export function ProductForm({
   productOptions,
@@ -16,7 +16,7 @@ export function ProductForm({
   selectedVariant: ProductFragment['selectedOrFirstAvailableVariant'];
 }) {
   const navigate = useNavigate();
-  const {open} = useAside();
+  const { open } = useAside();
   return (
     <div className="product-form">
       {productOptions.map((option) => {
@@ -25,7 +25,9 @@ export function ProductForm({
 
         return (
           <div className="product-options" key={option.name}>
-            <h5>{option.name}</h5>
+            <h5 className="technical-label" style={{ fontSize: '0.65rem', color: 'var(--color-muted)', marginBottom: '0.75rem' }}>
+              {option.name}
+            </h5>
             <div className="product-options-grid">
               {option.optionValues.map((value) => {
                 const {
@@ -54,8 +56,8 @@ export function ProductForm({
                       to={`/products/${handle}?${variantUriQuery}`}
                       style={{
                         border: selected
-                          ? '1px solid black'
-                          : '1px solid transparent',
+                          ? '1px solid var(--color-light)'
+                          : '1px solid rgba(255, 255, 255, 0.1)',
                         opacity: available ? 1 : 0.3,
                       }}
                     >
@@ -71,14 +73,13 @@ export function ProductForm({
                   return (
                     <button
                       type="button"
-                      className={`product-options-item${
-                        exists && !selected ? ' link' : ''
-                      }`}
+                      className={`product-options-item${exists && !selected ? ' link' : ''
+                        }`}
                       key={option.name + name}
                       style={{
                         border: selected
-                          ? '1px solid black'
-                          : '1px solid transparent',
+                          ? '1px solid var(--color-light)'
+                          : '1px solid rgba(255, 255, 255, 0.1)',
                         opacity: available ? 1 : 0.3,
                       }}
                       disabled={!exists}
@@ -109,12 +110,12 @@ export function ProductForm({
         lines={
           selectedVariant
             ? [
-                {
-                  merchandiseId: selectedVariant.id,
-                  quantity: 1,
-                  selectedVariant,
-                },
-              ]
+              {
+                merchandiseId: selectedVariant.id,
+                quantity: 1,
+                selectedVariant,
+              },
+            ]
             : []
         }
       >
