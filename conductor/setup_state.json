@@ -1,0 +1,48 @@
+{
+    "status": "complete",
+    "project_type": "brownfield",
+    "current_section": "styleguides",
+    "current_question": 2,
+    "completed_sections": [
+        "product",
+        "guidelines",
+        "tech_stack",
+        "workflow",
+        "styleguides"
+    ],
+    "answers": {
+        "project_name": "DB-Shopify",
+        "project_description": "A custom Shopify Hydrogen storefront for \"Druid and Bear\" brand.",
+        "problem_statement": "Provides a premium, performance-optimized shopping experience for high-end wellness products.",
+        "target_users": "Health-conscious consumers who prioritize high-performance wellness through wild-sourced, functional ingredients.",
+        "key_goals": [
+            "Maximize conversion rates for the core honey collection.",
+            "Educate users on the scientific benefits of Lion's Mane, Reishi, and Cordyceps.",
+            "Establish a premium \"Lux-Noir\" aesthetic that justifies a high price point."
+        ],
+        "voice_and_tone": "Concise, benefit-driven, and direct, optimized for SEO and accessibility while remaining user-friendly.",
+        "design_principles": "Minimal Dark Aesthetics (Lux-Noir), Stylized Benefit Clarity, High-Fidelity brand storytelling.",
+        "tech_stack": {
+            "language": "TypeScript",
+            "frontend_framework": "React 18.3.1 (Shopify Hydrogen / React Router 7)",
+            "build_tool": "Vite 6",
+            "deployment": "Shopify Oxygen",
+            "styling": "Vanilla CSS / Tailwind"
+        },
+        "tdd_strictness": "Moderate - tests encouraged, especially for core logic and UI components.",
+        "commit_strategy": "Squash commits per task/feature.",
+        "code_review_policy": "Optional / self-review OK",
+        "verification_checkpoints": "Only at track completion",
+        "styleguide_source": "fresh_best_practices"
+    },
+    "files_created": [
+        "conductor/index.md",
+        "conductor/product.md",
+        "conductor/product-guidelines.md",
+        "conductor/tech-stack.md",
+        "conductor/workflow.md",
+        "conductor/tracks.md"
+    ],
+    "started_at": "2026-02-24T20:37:30Z",
+    "last_updated": "2026-02-24T21:23:35Z"
+}

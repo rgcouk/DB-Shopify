@@ -17,6 +17,12 @@ import { ProductImage } from '~/components/ProductImage';
 import { ProductForm } from '~/components/ProductForm';
 import { redirectIfHandleIsLocalized } from '~/lib/redirect';
 
+// Asset Imports
+import lionsManeImg from '~/assets/ingredients/pdp/lions-mane.png';
+import reishiImg from '~/assets/ingredients/pdp/reishi.png';
+import chagaImg from '~/assets/ingredients/pdp/chaga.png';
+import cordycepsImg from '~/assets/ingredients/pdp/cordyceps.png';
+
 export const meta: Route.MetaFunction = ({ data }) => {
   return [
     { title: `Hydrogen | ${data?.product.title ?? ''}` },
@@ -117,26 +123,34 @@ export default function Product() {
     "LION'S MANE": {
       keywords: ["lion's mane", "lions mane", "focus"],
       components: ['HERICENONES', 'ERINACINES', 'BETA-GLUCANS'],
-      benefits: ['> NEUROGENESIS_PROMOTION', '> COGNITIVE_REPAIR', '> FLOW_STATE_SUSTAIN'],
+      benefits: ['NEUROGENESIS_PROMOTION', 'COGNITIVE_REPAIR', 'FLOW_STATE_SUSTAIN'],
       hexText: "C-14 H-20",
+      image: lionsManeImg,
+      clinicalSummary: "Stimulates Nerve Growth Factor (NGF) synthesis through specialized Hericenones, facilitating neural pathway repair and sustained focus."
     },
     "CORDYCEPS MILITARIS": {
       keywords: ["cordyceps", "militaris", "primal", "energy"],
       components: ['CORDYCEPIN', 'ADENOSINE', 'BETA-GLUCANS'],
-      benefits: ['> ATP_SYNTHESIS', '> OXYGEN_UPTAKE', '> ATHLETIC_ENDURANCE'],
+      benefits: ['ATP_SYNTHESIS', 'OXYGEN_UPTAKE', 'ATHLETIC_ENDURANCE'],
       hexText: "C-10 H-13",
+      image: cordycepsImg,
+      clinicalSummary: "Optimizes cellular energy recycling (ATP) and increases VO2 max efficiency for consistent physical output without systemic crash."
     },
     "REISHI": {
       keywords: ["reishi", "ganoderma", "rest", "sleep"],
       components: ['TRITERPENES', 'POLYSACCHARIDES', 'GANODERIC_ACID'],
-      benefits: ['> NERVOUS_SYSTEM_MUTE', '> DEEP_REM_ACTIVATION', '> IMMUNE_VALIDATION'],
+      benefits: ['NERVOUS_SYSTEM_MUTE', 'DEEP_REM_ACTIVATION', 'IMMUNE_VALIDATION'],
       hexText: "C-30 H-44",
+      image: reishiImg,
+      clinicalSummary: "Modulates the sympathetic nervous system, leveraging Triterpenes to signal deep restoration and immune system reconnaissance."
     },
     "CHAGA": {
       keywords: ["chaga", "inonotus", "immunity"],
       components: ['BETULINIC_ACID', 'MELANIN', 'ANTIOXIDANTS'],
-      benefits: ['> OXIDATIVE_SHIELD', '> IMMUNE_FORTIFICATION', '> DNA_PROTECTION'],
+      benefits: ['OXIDATIVE_SHIELD', 'IMMUNE_FORTIFICATION', 'DNA_PROTECTION'],
       hexText: "C-30 H-48",
+      image: chagaImg,
+      clinicalSummary: "High-density antioxidant shield that neutralizes oxidative stress and fortifies DNA integrity against environmental aging factors."
     },
   };
 
@@ -160,8 +174,10 @@ export default function Product() {
     return {
       ingredient: "WOODLAND EXTRACT",
       components: ['RAW_UK_HONEY', 'BETA-GLUCANS', 'ANTIOXIDANTS'],
-      benefits: ['> BIOLOGICAL_ASSIMILATION', '> SYSTEM_NOURISHMENT', '> VITALITY_RECOVERY'],
+      benefits: ['BIOLOGICAL_ASSIMILATION', 'SYSTEM_NOURISHMENT', 'VITALITY_RECOVERY'],
       hexText: "H-2 O",
+      image: lionsManeImg, // Fallback image
+      clinicalSummary: "Native forest extract synergy for foundational biological support."
     };
   }, [titleLower, descLower, tags]);
 
@@ -176,46 +192,24 @@ export default function Product() {
     <div className="product-page">
       <div className="product-layout container mb-32">
         <div className="product-image-side">
-          <ProductImage image={selectedVariant?.image} />
-          <div className="clinical-view panel-technical" style={{ marginTop: 'var(--space-8)', display: 'flex', flexDirection: 'column', gap: 'var(--space-8)' }}>
-            <div className="spec-grid">
-              <div className="spec-group">
-                <span className="spec-key">BASE_MEDIUM</span>
-                <span className="spec-value">RAW_UK_HONEY</span>
-              </div>
-              <div className="spec-group">
-                <span className="spec-key">SYNTHESIS</span>
-                <span className="spec-value">DUAL_EXTRACT</span>
-              </div>
-              <div className="spec-group">
-                <span className="spec-key">PURITY</span>
-                <span className="spec-value">99.8%_FRUITING_BODY</span>
-              </div>
-              <div className="spec-group">
-                <span className="spec-key">STATUS</span>
-                <span className="spec-value status-validated">VALIDATED</span>
-              </div>
+          <div className="product-image-wrapper">
+            <ProductImage image={selectedVariant?.image} />
+            <div className="image-technical-overlay">
+              <span className="technical-label">FIDELITY_CHECK // PASSED</span>
+              <div className="purity-marker">99.8%</div>
             </div>
-            <div className="clinical-visuals" style={{ borderTop: 'var(--border-delicate)', paddingTop: 'var(--space-6)' }}>
-              <div className="potency-chart">
-                <div className="potency-bar-refined">
-                  <div className="bar-labels">
-                    <span>BETA-GLUCANS</span>
-                    <span>92%_</span>
-                  </div>
-                  <div className="bar-bg">
-                    <div className="bar-fill" style={{ width: '92%' }}></div>
-                  </div>
-                </div>
-                <div className="potency-bar-refined">
-                  <div className="bar-labels">
-                    <span>TERPENES</span>
-                    <span>88%_</span>
-                  </div>
-                  <div className="bar-bg">
-                    <div className="bar-fill" style={{ width: '88%' }}></div>
-                  </div>
-                </div>
+          </div>
+          <div className="clinical-summary-box-v2">
+            <div className="bioactive-header">
+              <span className="technical-label">BIOACTIVE_SYNOPSIS</span>
+              <h3 className="clinical-title">{clinicalSpecs.ingredient}</h3>
+            </div>
+            <div className="clinical-body">
+              <p>{clinicalSpecs.clinicalSummary || "Clinical-grade extraction optimized for systemic bioavailability."}</p>
+              <div className="benefit-pills">
+                {clinicalSpecs.benefits.map((benefit, i) => (
+                  <span key={i} className="benefit-pill">{benefit.replace('> ', '')}</span>
+                ))}
               </div>
             </div>
           </div>
@@ -226,78 +220,100 @@ export default function Product() {
             <div className="technical-series">
               SERIES // {seriesNumber} // SYSTEM_READY
             </div>
-            <div className="totem-link" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', marginBottom: 'var(--space-3)' }}>
-              <span className="animal-icon" style={{ fontSize: '1.5rem' }}>{animal.icon}</span>
-              <span className="animal-name" style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: 'var(--color-muted)', textTransform: 'uppercase', letterSpacing: '0.25em' }}>{animal.name}</span>
+            <div className="totem-link">
+              <span className="animal-icon">{animal.icon}</span>
+              <span className="animal-name">{animal.name}</span>
             </div>
-            <h1>{title}</h1>
-            <ProductPrice
-              price={selectedVariant?.price}
-              compareAtPrice={selectedVariant?.compareAtPrice}
+            <h1 className="pdp-title">{title}</h1>
+            <div className="price-wrapper">
+              <ProductPrice
+                price={selectedVariant?.price}
+                compareAtPrice={selectedVariant?.compareAtPrice}
+              />
+            </div>
+          </div>
+
+          <div className="pdp-form-container">
+            <ProductForm
+              productOptions={productOptions}
+              selectedVariant={selectedVariant}
             />
           </div>
 
-          <ProductForm
-            productOptions={productOptions}
-            selectedVariant={selectedVariant}
-          />
-
-          <div className="product-narrative" style={{ marginTop: 'var(--space-8)', borderTop: 'var(--border-delicate)', paddingTop: 'var(--space-8)' }}>
-            <div className="ancient-view">
-              <h3 className="ritual-title" style={{ fontFamily: 'var(--font-serif)', fontSize: '1.5rem', fontStyle: 'italic', marginBottom: 'var(--space-6)', color: 'var(--color-light)' }}>{animal.ritual}</h3>
-              <div
-                className="product-description"
-                style={{ color: 'var(--color-muted)', lineHeight: '1.8' }}
-                dangerouslySetInnerHTML={{ __html: cleanDescription(descriptionHtml) }}
-              />
-            </div>
+          <div className="product-narrative-v2">
+            <h3 className="ritual-title">{animal.ritual}</h3>
+            <div
+              className="product-description-v2"
+              dangerouslySetInnerHTML={{ __html: cleanDescription(descriptionHtml) }}
+            />
           </div>
         </div>
       </div>
 
-      {/* CLINICAL DATA SECTION */}
-      <section className="product-clinical-analysis section-dark" style={{ borderTop: 'var(--border-delicate)', paddingTop: 'var(--space-12)', paddingBottom: 'var(--space-12)' }}>
+      {/* IMMERSIVE NARRATIVE SECTION */}
+      <section className="pdp-immersive-narrative" style={{ backgroundImage: `linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url(${clinicalSpecs.image})` }}>
         <div className="container">
-          <span className="technical-label" style={{ color: 'var(--color-accent-gold)' }}>// CLINICAL_DEEP_DIVE</span>
-          <h2 className="section-title" style={{ fontSize: '2.5rem', marginBottom: 'var(--space-8)' }}>Biological Validation.</h2>
-
-          <div className="ingredient-grid">
-            <div className="ingredient-card panel-technical">
-              <span className="technical-label">TARGET_INGREDIENT</span>
-              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', margin: 'var(--space-4) 0', color: 'var(--color-light)' }}>{clinicalSpecs.ingredient}</h3>
-              <div className="benefit-list" style={{ marginTop: 'var(--space-6)' }}>
-                {clinicalSpecs.benefits.map((benefit, i) => (
-                  <li key={i} style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem', color: 'var(--color-muted)', marginBottom: 'var(--space-2)' }}>{benefit}</li>
-                ))}
+          <div className="narrative-content">
+            <span className="technical-label" style={{ color: 'var(--color-accent-gold)' }}>// SPECIES_NARRATIVE</span>
+            <h2 className="narrative-title">Molecular Precision.</h2>
+            <div className="narrative-grid">
+              <div className="narrative-text-block">
+                <p className="large-p">
+                  Our extraction protocol targets the specific bio-structures of the <strong>{clinicalSpecs.ingredient}</strong>. By isolating active components like <em>{clinicalSpecs.components[0]}</em> and <em>{clinicalSpecs.components[1]}</em> at the molecular level, we ensure a therapeutic yield that standard powders cannot match.
+                </p>
+                <div className="component-breakdown-hud">
+                  {clinicalSpecs.components.map((comp, i) => (
+                    <div key={i} className="component-callout">
+                      <span className="comp-name">{comp}</span>
+                      <div className="comp-bar"><div className="comp-fill" style={{ width: '99.8%' }}></div></div>
+                      <span className="comp-val">99.8%</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div style={{ marginTop: 'var(--space-8)', paddingTop: 'var(--space-4)', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-                <span className="technical-label">EXTRACTION_METHOD</span>
-                <p style={{ marginTop: 'var(--space-2)', fontSize: '0.8rem', fontFamily: 'var(--font-mono)', color: 'var(--color-light)' }}>DUAL_EXTRACTION (WATER/ALCOHOL)</p>
+              <div className="narrative-visual">
+                <div className="hero-alchemy-matrix-large">
+                  <div className="matrix-circle outer"></div>
+                  <div className="matrix-circle middle"></div>
+                  <div className="matrix-polygon triangle"></div>
+                  <span className="alchemy-text-large">{clinicalSpecs.hexText}</span>
+                </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
 
-            <div className="ingredient-card panel-technical" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', minHeight: '300px' }}>
-              <div className="hero-alchemy-matrix" style={{ position: 'relative', width: '200px', height: '200px', opacity: 0.5, transform: 'none', top: 'auto', left: 'auto', pointerEvents: 'auto' }}>
-                <div className="matrix-circle outer" style={{ animationDuration: '60s' }}></div>
-                <div className="matrix-circle middle" style={{ animationDuration: '45s' }}></div>
-                <div className="matrix-polygon triangle" style={{ width: '80%', height: '80%', border: '1px solid var(--color-accent-gold)' }}></div>
-                <span className="alchemy-text" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', letterSpacing: '0.1em', fontSize: '0.8rem' }}>{clinicalSpecs.hexText}</span>
-              </div>
+      {/* THE HONEY MATRIX HUD - PD VERSION */}
+      <section className="pdp-honey-matrix">
+        <div className="container">
+          <div className="matrix-hud-container">
+            <div className="hud-header">
+              <span className="technical-label">DELIVERY_SYSTEM // BIOAVAILABILITY_PROTOCOL</span>
+              <h2 className="hud-title">The Honey Matrix.</h2>
             </div>
-
-            <div className="ingredient-card panel-technical">
-              <span className="technical-label">ACTIVE_COMPONENTS</span>
-              <ul style={{ listStyle: 'none', padding: 0, margin: 'var(--space-4) 0', fontFamily: 'var(--font-mono)', fontSize: '0.8rem', color: 'var(--color-light)', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
-                {clinicalSpecs.components.map((comp, i) => (
-                  <li key={i} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: 'var(--space-2)' }}>
-                    <span>{comp}</span>
-                    <span style={{ color: 'var(--color-accent-gold)' }}>[ 99.8% ]</span>
-                  </li>
-                ))}
-              </ul>
-              <p style={{ marginTop: 'var(--space-6)', fontSize: '0.9rem', color: 'var(--color-muted)', lineHeight: '1.6' }}>
-                Infused natively into a Raw UK Honey matrix to bypass standard digestive degradation, increasing cellular bioavailability by a factor of 3.4x compared to standardized capsule extractions.
-              </p>
+            <div className="hud-features">
+              <div className="hud-feature">
+                <div className="hud-icon">01</div>
+                <div className="hud-info">
+                  <h4>Oral Mucosal Pathway</h4>
+                  <p>Raw honey enables sublingual absorption, bypassing digestive acids for faster systemic entry.</p>
+                </div>
+              </div>
+              <div className="hud-feature">
+                <div className="hud-icon">02</div>
+                <div className="hud-info">
+                  <h4>Enzyme Shield</h4>
+                  <p>Natural enzymes in the honey matrix protect fragile fungal compounds from thermal degradation.</p>
+                </div>
+              </div>
+              <div className="hud-feature">
+                <div className="hud-icon">03</div>
+                <div className="hud-info">
+                  <h4>Targeted Synthesis</h4>
+                  <p>Increased bioavailability factor of 3.4x vs standardized capsule-based extractions.</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -323,94 +339,94 @@ export default function Product() {
 }
 
 const PRODUCT_VARIANT_FRAGMENT = `#graphql
-  fragment ProductVariant on ProductVariant {
-    availableForSale
+      fragment ProductVariant on ProductVariant {
+        availableForSale
     compareAtPrice {
-      amount
+        amount
       currencyCode
     }
-    id
-    image {
-      __typename
+      id
+      image {
+        __typename
       id
       url
       altText
       width
       height
     }
-    price {
-      amount
+      price {
+        amount
       currencyCode
     }
-    product {
-      title
+      product {
+        title
       handle
     }
-    selectedOptions {
-      name
+      selectedOptions {
+        name
       value
     }
-    sku
-    title
-    unitPrice {
-      amount
+      sku
+      title
+      unitPrice {
+        amount
       currencyCode
     }
   }
-` as const;
+      ` as const;
 
 const PRODUCT_FRAGMENT = `#graphql
-  fragment Product on Product {
-    id
+      fragment Product on Product {
+        id
     title
-    vendor
-    handle
-    descriptionHtml
-    description
-    tags
-    encodedVariantExistence
-    encodedVariantAvailability
-    options {
-      name
+      vendor
+      handle
+      descriptionHtml
+      description
+      tags
+      encodedVariantExistence
+      encodedVariantAvailability
+      options {
+        name
       optionValues {
         name
         firstSelectableVariant {
-          ...ProductVariant
-        }
-        swatch {
-          color
+        ...ProductVariant
+      }
+      swatch {
+        color
           image {
-            previewImage {
-              url
-            }
+        previewImage {
+        url
+      }
           }
         }
       }
     }
-    selectedOrFirstAvailableVariant(selectedOptions: $selectedOptions, ignoreUnknownOptions: true, caseInsensitiveMatch: true) {
-      ...ProductVariant
-    }
-    adjacentVariants (selectedOptions: $selectedOptions) {
-      ...ProductVariant
-    }
-    seo {
-      description
+      selectedOrFirstAvailableVariant(selectedOptions: $selectedOptions, ignoreUnknownOptions: true, caseInsensitiveMatch: true) {
+        ...ProductVariant
+      }
+      adjacentVariants (selectedOptions: $selectedOptions) {
+        ...ProductVariant
+      }
+      seo {
+        description
       title
     }
   }
-  ${PRODUCT_VARIANT_FRAGMENT}
-` as const;
+      ${PRODUCT_VARIANT_FRAGMENT}
+      ` as const;
 
 const PRODUCT_QUERY = `#graphql
-  query Product(
-    $country: CountryCode
-    $handle: String!
-    $language: LanguageCode
-    $selectedOptions: [SelectedOptionInput!]!
-  ) @inContext(country: $country, language: $language) {
-    product(handle: $handle) {
-      ...Product
-    }
+      query Product(
+      $country: CountryCode
+      $handle: String!
+      $language: LanguageCode
+      $selectedOptions: [SelectedOptionInput!]!
+      ) @inContext(country: $country, language: $language) {
+        product(handle: $handle) {
+        ...Product
+      }
   }
-  ${PRODUCT_FRAGMENT}
-` as const;
+      ${PRODUCT_FRAGMENT}
+      ` as const;

@@ -55,7 +55,7 @@ export function Hero() {
                         Clinical-grade woodland extracts locked in a natural honey matrix. High-efficiency physical and cognitive fuel designed for maximum absorption.
                     </p>
                     <div className="hero-actions-minimal">
-                        <Link to="/collections/all" className="btn-minimal-white" style={{ background: 'var(--color-light)', color: 'var(--color-dark)', border: 'none', fontWeight: 600 }}>
+                        <Link to="#apothecary" className="btn-minimal-white" style={{ background: 'var(--color-light)', color: 'var(--color-dark)', border: 'none', fontWeight: 600 }}>
                             [ EXPLORE SYSTEMS ]
                         </Link>
                     </div>

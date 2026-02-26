@@ -34,7 +34,7 @@ export function Header({
       />
       <div className="header-logo-container">
         <NavLink prefetch="intent" to="/" className={activeLink} end>
-          <img src="/logo.png" alt="Druid & Bear" className="brand-logo-img" />
+          <img src="/logo.svg" alt="Druid & Bear" className="brand-logo-img" />
         </NavLink>
       </div>
       <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />

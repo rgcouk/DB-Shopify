@@ -4,14 +4,24 @@ import {
   Link,
 } from 'react-router';
 import type { Route } from './+types/_index';
-import { Suspense } from 'react';
+import { Suspense, useState, useMemo } from 'react';
 import { Image } from '@shopify/hydrogen';
 import type {
   FeaturedCollectionFragment,
+  RecommendedProductFragment,
   RecommendedProductsQuery,
 } from 'storefrontapi.generated';
 import { ProductItem } from '~/components/ProductItem';
 import { Hero } from '~/components/Hero';
+
+import focusImg from '~/assets/focus.png';
+import primalImg from '~/assets/primal.png';
+import restImg from '~/assets/rest.png';
+
+import lionsManeImg from '~/assets/ingredients/lions_mane.png';
+import cordycepsImg from '~/assets/ingredients/cordyceps.png';
+import reishiImg from '~/assets/ingredients/reishi.png';
+import honeyMatrixImg from '~/assets/ingredients/honey_matrix.png';
 
 export const meta: Route.MetaFunction = () => {
   return [
@@ -29,7 +39,15 @@ export async function loader(args: Route.LoaderArgs) {
     storefront.query(FEATURED_COLLECTION_QUERY),
   ]);
 
-  const recommendedProducts = storefront.query(RECOMMENDED_PRODUCTS_QUERY);
+  const recommendedProducts = storefront.query(RECOMMENDED_PRODUCTS_QUERY).then(res => {
+    const nodes = res.products.nodes;
+    return {
+      all: nodes,
+      honeys: nodes.filter(n => n.productType === 'Infused Honey' || n.tags.includes('Honey')),
+      tinctures: nodes.filter(n => n.productType === 'Liquid Tincture' || n.tags.includes('Tincture')),
+      gummies: nodes.filter(n => n.productType === 'Mushroom Gummy' || n.tags.includes('Gummy') || n.tags.includes('Orbs')),
+    };
+  });
 
   return {
     featuredCollection: collections.nodes[0],
@@ -71,10 +89,6 @@ function loadDeferredData({ context }: Route.LoaderArgs) {
   };
 }
 
-
-import focusImg from '~/assets/focus.png';
-import primalImg from '~/assets/primal.png';
-import restImg from '~/assets/rest.png';
 
 export default function Homepage() {
   const data = useLoaderData<typeof loader>();
@@ -142,98 +156,135 @@ export default function Homepage() {
         </div>
       </section>
 
-      {/* SECTION 2: Clinical Ingredient Analysis */}
-      <section className="section-dark">
+      {/* SECTION 2: Mushroom Synergy & Biological Components */}
+      <section id="synergy" className="section-dark" style={{ position: 'relative', padding: 'var(--space-24) 0' }}>
         <div className="container">
-          <span className="technical-label">BIOLOGICAL_COMPONENTS</span>
-          <h2 className="section-title">Rooted in the Woodland. <br /> Proven by Science.</h2>
+          <span className="technical-label">BIOLOGICAL_SYNERGY</span>
+          <h2 className="section-title" style={{ fontSize: '3.5rem', maxWidth: '800px' }}>Precision Extraction. <br /> Maximum Biological Yield.</h2>
 
-          <div className="ingredient-grid">
-            <div className="ingredient-card panel-technical">
-              <span className="benefit-tag">COGNITIVE_REPAIR</span>
-              <span className="ingredient-icon">🍄</span>
-              <h3 style={{ color: 'var(--color-light)', marginBottom: 'var(--space-2)' }}>Lion's Mane</h3>
-              <p style={{ color: 'var(--color-muted)', fontSize: '0.9rem', lineHeight: '1.6' }}>
-                Contains hericenones and erinacines that stimulate Nerve Growth Factor (NGF) for neural plasticity and focus.
-              </p>
-              <ul className="benefit-list">
-                <li>ACCELERATED_FLOW_STATE</li>
-                <li>NEURAL_DENSITY_SUPPORT</li>
-                <li>COGNITIVE_PRECISION</li>
-              </ul>
-            </div>
+          <div className="synergy-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 'var(--space-12)', marginTop: 'var(--space-16)' }}>
 
-            <div className="ingredient-card panel-technical">
-              <span className="benefit-tag">ADENOSINE_MODULATION</span>
-              <span className="ingredient-icon">⚡</span>
-              <h3 style={{ color: 'var(--color-light)', marginBottom: 'var(--space-2)' }}>Cordyceps Militaris</h3>
-              <p style={{ color: 'var(--color-muted)', fontSize: '0.9rem', lineHeight: '1.6' }}>
-                Enhances cellular ATP production and oxygen utilization. Primal energy without the central nervous system crash.
-              </p>
-              <ul className="benefit-list">
-                <li>ATP_SYNTHESIS_UPREGULATION</li>
-                <li>MAX_VO2_OPTIMIZATION</li>
-                <li>ADAPTOGENIC_RESILIENCE</li>
-              </ul>
-            </div>
-
-            <div className="ingredient-card panel-technical">
-              <span className="benefit-tag">HOMEOSTATIC_RECOVERY</span>
-              <span className="ingredient-icon">🌿</span>
-              <h3 style={{ color: 'var(--color-light)', marginBottom: 'var(--space-2)' }}>Ganoderma (Reishi)</h3>
-              <p style={{ color: 'var(--color-muted)', fontSize: '0.9rem', lineHeight: '1.6' }}>
-                The 'Mushroom of Immortality.' Rich in triterpenes that modulate the stress response and promote deep REM.
-              </p>
-              <ul className="benefit-list">
-                <li>CORTISOL_MODULATION</li>
-                <li>REM_CYCLE_AMPLIFICATION</li>
-                <li>SYMPATHETIC_SYSTEM_RESET</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION 3: The Delivery System */}
-      <section className="section-light">
-        <div className="container">
-          <div className="delivery-system-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'var(--space-12)', alignItems: 'center' }}>
-            <div>
-              <span className="technical-label">BIOAVAILABILITY_PROTOCOL</span>
-              <h2 className="section-title">The Honey Matrix.</h2>
-              <p style={{ color: 'var(--color-muted)', fontSize: '1.1rem', lineHeight: '1.8', marginBottom: 'var(--space-8)' }}>
-                Standard extracts are often wasted by the digestive system. We infuse our dual-extracts into <strong>Raw Woodland Honey</strong>—a natural enzyme-rich medium that protects the bioactives and ensures rapid mucosal absorption.
-              </p>
-              <div className="medical-graphic">
-                <div style={{ position: 'relative', zIndex: 2, padding: 'var(--space-6)' }}>
-                  <span className="technical-label" style={{ color: 'var(--color-accent-gold)' }}>ABSORPTION_RATE_ANALYSIS</span>
-                  <div className="potency-chart" style={{ marginTop: 'var(--space-4)' }}>
-                    <div className="potency-bar-refined">
-                      <div className="bar-labels"><span>HONEY_MATRIX_DELIVERY</span><span>98%_</span></div>
-                      <div className="bar-bg"><div className="bar-fill" style={{ width: '98%' }}></div></div>
-                    </div>
-                    <div className="potency-bar-refined">
-                      <div className="bar-labels"><span>STANDARD_CAPSULE</span><span>34%_</span></div>
-                      <div className="bar-bg"><div className="bar-fill" style={{ width: '34%', background: 'var(--color-muted)' }}></div></div>
-                    </div>
+            {/* LION'S MANE */}
+            <div className="synergy-card panel-technical" style={{ position: 'relative', overflow: 'hidden', minHeight: '500px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: 'var(--space-10)' }}>
+              <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+                <img src={lionsManeImg} alt="Lion's Mane" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.4 }} />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, var(--color-dark) 20%, transparent 100%)' }}></div>
+              </div>
+              <div style={{ position: 'relative', zIndex: 1 }}>
+                <span className="benefit-tag" style={{ background: 'rgba(255, 255, 255, 0.1)', borderColor: 'rgba(255, 255, 255, 0.2)' }}>NEURAL_GENESIS</span>
+                <h3 style={{ fontSize: '2.4rem', color: 'var(--color-light)', margin: 'var(--space-4) 0' }}>Lion's Mane</h3>
+                <p style={{ color: 'var(--color-muted)', fontSize: '1rem', lineHeight: '1.6', marginBottom: 'var(--space-6)' }}>
+                  Dual-extracted concentration of Hericenones for NGF stimulation. Engineered for mental precision and long-term cognitive health.
+                </p>
+                <div className="technical-specs" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-4)', borderTop: 'var(--border-delicate)', paddingTop: 'var(--space-6)' }}>
+                  <div>
+                    <span className="technical-label" style={{ fontSize: '0.6rem', display: 'block' }}>BIOACTIVE_COMPLEX</span>
+                    <span style={{ color: 'white', fontFamily: 'var(--font-mono)', fontSize: '0.8rem' }}>HERICENE_A+B</span>
+                  </div>
+                  <div>
+                    <span className="technical-label" style={{ fontSize: '0.6rem', display: 'block' }}>SYSTEM_IMPACT</span>
+                    <span style={{ color: 'white', fontFamily: 'var(--font-mono)', fontSize: '0.8rem' }}>COGNITIVE_REPAIR</span>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="panel-technical" style={{ padding: 'var(--space-12)' }}>
-              <span className="technical-label">CORE_BENEFITS</span>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)', marginTop: 'var(--space-8)' }}>
-                <div style={{ borderBottom: 'var(--border-delicate)', paddingBottom: 'var(--space-4)' }}>
-                  <h4 style={{ color: 'var(--color-light)', marginBottom: 'var(--space-2)' }}>01 // MENTAL_CLARITY</h4>
-                  <p style={{ color: 'var(--color-muted)', fontSize: '0.85rem' }}>Eliminate brain fog and stabilize cognitive load during deep work sessions.</p>
+
+            {/* CORDYCEPS */}
+            <div className="synergy-card panel-technical" style={{ position: 'relative', overflow: 'hidden', minHeight: '500px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: 'var(--space-10)' }}>
+              <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+                <img src={cordycepsImg} alt="Cordyceps" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.4 }} />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, var(--color-dark) 20%, transparent 100%)' }}></div>
+              </div>
+              <div style={{ position: 'relative', zIndex: 1 }}>
+                <span className="benefit-tag" style={{ background: 'rgba(255, 77, 77, 0.1)', borderColor: 'rgba(255, 77, 77, 0.3)', color: '#FF7D7D' }}>ADENOSINE_FLOW</span>
+                <h3 style={{ fontSize: '2.4rem', color: 'var(--color-light)', margin: 'var(--space-4) 0' }}>Cordyceps</h3>
+                <p style={{ color: 'var(--color-muted)', fontSize: '1rem', lineHeight: '1.6', marginBottom: 'var(--space-6)' }}>
+                  Optimized for cellular ATP production. Increases oxygen utilization and physical endurance without catecholamine exhaustion.
+                </p>
+                <div className="technical-specs" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-4)', borderTop: 'var(--border-delicate)', paddingTop: 'var(--space-6)' }}>
+                  <div>
+                    <span className="technical-label" style={{ fontSize: '0.6rem', display: 'block' }}>BIOACTIVE_COMPLEX</span>
+                    <span style={{ color: 'white', fontFamily: 'var(--font-mono)', fontSize: '0.8rem' }}>CORDYCEPIN_3%</span>
+                  </div>
+                  <div>
+                    <span className="technical-label" style={{ fontSize: '0.6rem', display: 'block' }}>SYSTEM_IMPACT</span>
+                    <span style={{ color: 'white', fontFamily: 'var(--font-mono)', fontSize: '0.8rem' }}>ATP_MODULATION</span>
+                  </div>
                 </div>
-                <div style={{ borderBottom: 'var(--border-delicate)', paddingBottom: 'var(--space-4)' }}>
-                  <h4 style={{ color: 'var(--color-light)', marginBottom: 'var(--space-2)' }}>02 // ENDOCRINE_SUPPORT</h4>
-                  <p style={{ color: 'var(--color-muted)', fontSize: '0.85rem' }}>Support hormonal balance and adrenal health through adaptogenic signaling.</p>
+              </div>
+            </div>
+
+            {/* REISHI */}
+            <div className="synergy-card panel-technical" style={{ position: 'relative', overflow: 'hidden', minHeight: '500px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: 'var(--space-10)' }}>
+              <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+                <img src={reishiImg} alt="Reishi" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.4 }} />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, var(--color-dark) 20%, transparent 100%)' }}></div>
+              </div>
+              <div style={{ position: 'relative', zIndex: 1 }}>
+                <span className="benefit-tag" style={{ background: 'rgba(77, 255, 171, 0.1)', borderColor: 'rgba(77, 255, 171, 0.3)', color: 'var(--color-success)' }}>HOMEOSTATIC_RESET</span>
+                <h3 style={{ fontSize: '2.4rem', color: 'var(--color-light)', margin: 'var(--space-4) 0' }}>Reishi</h3>
+                <p style={{ color: 'var(--color-muted)', fontSize: '1rem', lineHeight: '1.6', marginBottom: 'var(--space-6)' }}>
+                  High-potency triterpene profile for parasympathetic activation. Modulates cortisol and facilitates deep REM cycles.
+                </p>
+                <div className="technical-specs" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-4)', borderTop: 'var(--border-delicate)', paddingTop: 'var(--space-6)' }}>
+                  <div>
+                    <span className="technical-label" style={{ fontSize: '0.6rem', display: 'block' }}>BIOACTIVE_COMPLEX</span>
+                    <span style={{ color: 'white', fontFamily: 'var(--font-mono)', fontSize: '0.8rem' }}>GANODERIC_ACID</span>
+                  </div>
+                  <div>
+                    <span className="technical-label" style={{ fontSize: '0.6rem', display: 'block' }}>SYSTEM_IMPACT</span>
+                    <span style={{ color: 'white', fontFamily: 'var(--font-mono)', fontSize: '0.8rem' }}>CORTISOL_STABILITY</span>
+                  </div>
                 </div>
-                <div style={{ borderBottom: 'var(--border-delicate)', paddingBottom: 'var(--space-4)' }}>
-                  <h4 style={{ color: 'var(--color-light)', marginBottom: 'var(--space-2)' }}>03 // IMMUNE_VALIDATION</h4>
-                  <p style={{ color: 'var(--color-muted)', fontSize: '0.85rem' }}>Beta-glucan complexity reinforces natural killer cell activity and defense.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 3: The Delivery System (The Honey Matrix) */}
+      <section className="section-dark" style={{ borderTop: 'var(--border-delicate)', borderBottom: 'var(--border-delicate)', overflow: 'hidden' }}>
+        <div className="container">
+          <div className="delivery-system-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: 'var(--space-16)', alignItems: 'center' }}>
+            <div style={{ position: 'relative' }}>
+              <span className="technical-label">BIOAVAILABILITY_PROTOCOL</span>
+              <h2 className="section-title" style={{ fontSize: '4rem' }}>The Honey <br /><span className="text-italic">Matrix.</span></h2>
+              <p style={{ color: 'var(--color-muted)', fontSize: '1.2rem', lineHeight: '1.8', marginBottom: 'var(--space-10)', maxWidth: '500px' }}>
+                Standard extracts often fail the digestive bypass. We lock our clinical dual-extracts into <strong>Raw Woodland Honey</strong>—a bioactive medium that bypasses degradation and ensures rapid mucosal absorption.
+              </p>
+
+              <div className="matrix-analysis-box panel-technical" style={{ padding: 'var(--space-8)', borderLeft: '3px solid var(--color-success)' }}>
+                <span className="technical-label" style={{ color: 'var(--color-success)', marginBottom: 'var(--space-2)', display: 'block' }}>// ABSORPTION_VALIDATION</span>
+                <p style={{ fontSize: '0.9rem', color: 'var(--color-light)' }}>
+                  Enzymatic honey structures act as a biological carrier, delivering 98% of fungal triterpenes directly to the bloodstream.
+                </p>
+              </div>
+            </div>
+
+            <div className="matrix-visual panel-technical" style={{ position: 'relative', padding: '0', overflow: 'hidden', aspectRatio: '4/5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <img src={honeyMatrixImg} alt="Honey Matrix" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.6 }} />
+              <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle, transparent 20%, var(--color-dark) 100%)' }}></div>
+
+              {/* Dynamic HUD Data overlay */}
+              <div style={{ position: 'relative', zIndex: 2, width: '80%', height: '80%', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: 'var(--space-6)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span className="technical-label" style={{ fontSize: '0.5rem' }}>SCAN_PHASE: 04</span>
+                  <span className="technical-label" style={{ fontSize: '0.5rem' }}>POTENCY: 100%</span>
+                </div>
+
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ width: '120px', height: '120px', border: '1px solid var(--color-success)', borderRadius: '50%', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center', animation: 'pulse 3s infinite' }}>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--color-success)' }}>OPTIMAL_BIND</span>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                  <div className="potency-chart-mini" style={{ width: '100px' }}>
+                    <div style={{ height: '2px', background: 'var(--color-success)', width: '100%', marginBottom: '4px' }}></div>
+                    <div style={{ height: '2px', background: 'rgba(255,255,255,0.1)', width: '40%' }}></div>
+                  </div>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.5rem', opacity: 0.5 }}>REF_ID: WOODLAND_BEE_082</span>
                 </div>
               </div>
             </div>
@@ -333,43 +384,70 @@ function FeaturedCollection({
 function RecommendedProducts({
   products,
 }: {
-  products: Promise<RecommendedProductsQuery | null>;
+  products: Promise<{
+    all: RecommendedProductFragment[];
+    honeys: RecommendedProductFragment[];
+    tinctures: RecommendedProductFragment[];
+    gummies: RecommendedProductFragment[];
+  } | null>;
 }) {
+  const [activeCategory, setActiveCategory] = useState<'honeys' | 'tinctures' | 'gummies'>('honeys');
+
   return (
-    <div className="recommended-products">
-      <div className="section-header">
-        <h2 className="section-title">RESTOCK THE APOTHECARY</h2>
-        <div className="section-divider"></div>
+    <div id="apothecary" className="recommended-products">
+      <div className="container">
+        <div className="section-header" style={{ textAlign: 'center', marginBottom: 'var(--space-16)' }}>
+          <span className="technical-label">SYSTEM_CATEGORIES</span>
+          <h2 className="section-title" style={{ fontSize: '3rem' }}>Select Your Delivery System.</h2>
+          <div className="category-toggle" style={{ display: 'flex', justifyContent: 'center', gap: 'var(--space-8)', marginTop: 'var(--space-8)' }}>
+            {(['honeys', 'tinctures', 'gummies'] as const).map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`category-btn ${activeCategory === cat ? 'active' : ''}`}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: activeCategory === cat ? 'white' : 'var(--color-muted)',
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '0.8rem',
+                  letterSpacing: '0.2em',
+                  textTransform: 'uppercase',
+                  cursor: 'pointer',
+                  padding: 'var(--space-2) 0',
+                  borderBottom: activeCategory === cat ? '2px solid white' : '2px solid transparent',
+                  transition: 'var(--transition-standard)'
+                }}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <Suspense fallback={<div style={{ textAlign: 'center', color: 'var(--color-muted)', padding: 'var(--space-20)' }}>CALIBRATING_SENSORS...</div>}>
+          <Await resolve={products}>
+            {(response) => {
+              if (!response) return null;
+              const displayProducts = response[activeCategory];
+
+              return (
+                <div className="category-showcase-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 'var(--space-8)' }}>
+                  {displayProducts.map((product) => (
+                    <ProductItem key={product.id} product={product} />
+                  ))}
+                </div>
+              );
+            }}
+          </Await>
+        </Suspense>
+
+        <div style={{ textAlign: 'center', marginTop: 'var(--space-16)' }}>
+          <Link to="/collections/all" className="technical-label" style={{ color: 'white', textDecoration: 'none', border: '1px solid rgba(255,255,255,0.1)', padding: 'var(--space-4) var(--space-8)', display: 'inline-block' }}>
+            [ VIEW_ALL_PRODUCTS // FULL_INVENTORY ]
+          </Link>
+        </div>
       </div>
-      <Suspense fallback={<div>Loading...</div>}>
-        <Await resolve={products}>
-          {(response) => {
-            if (!response) return null;
-            const nodes = response.products.nodes;
-
-            // Sort to ensure honeys are first, then others
-            const sortedProducts = [...nodes].sort((a, b) => {
-              const weight = (p: any) => {
-                const title = p.title.toLowerCase();
-                if (title.includes('honey')) return 1;
-                if (title.includes('tincture') || title.includes('extract')) return 2;
-                if (title.includes('gummy') || title.includes('gummies')) return 3;
-                return 4;
-              };
-              return weight(a) - weight(b);
-            });
-
-            return (
-              <div className="recommended-products-grid">
-                {sortedProducts.map((product) => (
-                  <ProductItem key={product.id} product={product} />
-                ))}
-              </div>
-            );
-          }}
-        </Await>
-
-      </Suspense>
     </div>
   );
 }
@@ -402,6 +480,8 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
     id
     title
     handle
+    productType
+    tags
     priceRange {
       minVariantPrice {
         amount
@@ -418,7 +498,7 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
   }
   query RecommendedProducts ($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
-    products(first: 9, sortKey: UPDATED_AT, reverse: true) {
+    products(first: 50, sortKey: UPDATED_AT, reverse: true) {
       nodes {
         ...RecommendedProduct
       }
