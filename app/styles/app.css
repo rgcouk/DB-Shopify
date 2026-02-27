@@ -276,8 +276,8 @@ button.reset:hover:not(:has(> *)) {
   align-items: center;
   background: var(--glass-bg);
   border-bottom: var(--border-delicate);
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
+  justify-content: space-between;
   height: var(--header-height);
   padding: 0 var(--space-12);
   position: sticky;
@@ -314,6 +314,33 @@ button.reset:hover:not(:has(> *)) {
 .header-menu-desktop {
   display: flex;
   grid-gap: 2rem;
+  flex: 1;
+  justify-content: center;
+}
+
+.mobile-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--color-dark);
+  border-bottom: var(--border-delicate);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.mobile-dropdown-menu .header-menu-mobile {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-8) var(--space-12);
+  gap: var(--space-6);
+}
+
+.mobile-dropdown-menu .header-menu-item {
+  justify-content: flex-start;
+  padding: var(--space-2) 0;
+  font-size: 1rem;
 }
 
 @media (max-width: 48em) {
@@ -798,6 +825,162 @@ button.reset:hover:not(:has(> *)) {
 
 .account-logout {
   display: inline-block;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slide-up-animation {
+  animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/*
+* --------------------------------------------------
+* Hero to Flagship Separator
+* --------------------------------------------------
+*/
+.hero-to-flagship-separator {
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(90deg, transparent 0%, rgba(236, 182, 19, 0.2) 50%, transparent 100%);
+  margin: var(--space-16) 0 var(--space-8) 0;
+  position: relative;
+}
+
+.hero-to-flagship-separator::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 150px;
+  height: 1px;
+  background: #ecb613;
+  /* Gold */
+  box-shadow: 0 0 15px 3px rgba(236, 182, 19, 0.4);
+}
+
+/*
+* --------------------------------------------------
+* Flagship Accordion Layout
+* --------------------------------------------------
+*/
+.flagship-accordion {
+  display: flex;
+  height: 600px;
+  gap: var(--space-4);
+  width: 100%;
+  margin-top: var(--space-12);
+}
+
+.flagship-card {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  /* subtle curve instead of var(--radius-standard) to keep it sleeker */
+  cursor: pointer;
+  transition: flex 0.7s cubic-bezier(0.16, 1, 0.3, 1), filter 0.7s ease, border-color 0.7s ease;
+  filter: grayscale(0.8) brightness(0.4);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.flagship-card.active {
+  flex: 3;
+  filter: grayscale(0) brightness(1);
+  border-color: rgba(236, 182, 19, 0.3);
+  cursor: default;
+}
+
+.flagship-card-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  transition: transform 0.7s ease;
+}
+
+.flagship-card:hover:not(.active) .flagship-card-bg {
+  transform: scale(1.05);
+}
+
+.flagship-card:hover:not(.active) {
+  filter: grayscale(0.8) brightness(0.6);
+}
+
+.flagship-card-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.flagship-card-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.3) 60%, transparent 100%);
+}
+
+.flagship-card-content {
+  position: relative;
+  z-index: 1;
+  padding: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  transition-delay: 0s;
+}
+
+.flagship-card.active .flagship-card-content {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.4s;
+}
+
+.flagship-card-title-vertical {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-90deg);
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  letter-spacing: 0.4em;
+  color: var(--color-light);
+  white-space: nowrap;
+  opacity: 1;
+  transition: opacity 0.4s ease;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.flagship-card.active .flagship-card-title-vertical {
+  opacity: 0;
+}
+
+@media (max-width: 768px) {
+  .flagship-accordion {
+    flex-direction: column;
+    height: 800px;
+  }
+
+  .flagship-card-title-vertical {
+    transform: translate(-50%, -50%);
+    /* Don't rotate on mobile */
+    font-size: 1.2rem;
+  }
 }
 
 /*

@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { Await, NavLink, useAsyncValue } from 'react-router';
 import {
   type CartViewPayload,
@@ -24,20 +24,38 @@ export function Header({
   publicStoreDomain,
 }: HeaderProps) {
   const { shop, menu } = header;
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
     <header className="header">
+      <div className="header-logo-container">
+        <NavLink prefetch="intent" to="/" className={activeLink} end onClick={() => setIsMobileMenuOpen(false)}>
+          <img src="/logo.svg" alt="Druid & Bear" className="brand-logo-img" />
+        </NavLink>
+      </div>
       <HeaderMenu
         menu={menu}
         viewport="desktop"
         primaryDomainUrl={header.shop.primaryDomain.url}
         publicStoreDomain={publicStoreDomain}
       />
-      <div className="header-logo-container">
-        <NavLink prefetch="intent" to="/" className={activeLink} end>
-          <img src="/logo.svg" alt="Druid & Bear" className="brand-logo-img" />
-        </NavLink>
-      </div>
-      <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
+      <HeaderCtas
+        isLoggedIn={isLoggedIn}
+        cart={cart}
+        isMobileMenuOpen={isMobileMenuOpen}
+        onToggleMobileMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+      />
+      {isMobileMenuOpen && (
+        <div className="mobile-dropdown-menu">
+          <HeaderMenu
+            menu={menu}
+            viewport="mobile"
+            primaryDomainUrl={header.shop.primaryDomain.url}
+            publicStoreDomain={publicStoreDomain}
+            onClose={() => setIsMobileMenuOpen(false)}
+          />
+        </div>
+      )}
     </header>
   );
 }
@@ -47,21 +65,28 @@ export function HeaderMenu({
   primaryDomainUrl,
   viewport,
   publicStoreDomain,
+  onClose,
 }: {
   menu: HeaderProps['header']['menu'];
   primaryDomainUrl: HeaderProps['header']['shop']['primaryDomain']['url'];
   viewport: Viewport;
   publicStoreDomain: HeaderProps['publicStoreDomain'];
+  onClose?: () => void;
 }) {
   const className = `header-menu-${viewport}`;
-  const { close } = useAside();
+  const { close: closeAside } = useAside();
+
+  function handleClose() {
+    closeAside();
+    onClose?.();
+  }
 
   return (
     <nav className={className} role="navigation">
       {viewport === 'mobile' && (
         <NavLink
           end
-          onClick={close}
+          onClick={handleClose}
           prefetch="intent"
           className={activeLink}
           to="/"
@@ -84,7 +109,7 @@ export function HeaderMenu({
             className={activeLink}
             end
             key={item.id}
-            onClick={close}
+            onClick={handleClose}
             prefetch="intent"
             to={url}
           >
@@ -99,10 +124,14 @@ export function HeaderMenu({
 function HeaderCtas({
   isLoggedIn,
   cart,
-}: Pick<HeaderProps, 'isLoggedIn' | 'cart'>) {
+  isMobileMenuOpen,
+  onToggleMobileMenu,
+}: Pick<HeaderProps, 'isLoggedIn' | 'cart'> & {
+  isMobileMenuOpen: boolean;
+  onToggleMobileMenu: () => void;
+}) {
   return (
     <nav className="header-ctas" role="navigation">
-      <HeaderMenuMobileToggle />
       <NavLink prefetch="intent" to="/account" className={activeLink}>
         <Suspense fallback="AUTH">
           <Await resolve={isLoggedIn} errorElement="AUTH">
@@ -112,23 +141,30 @@ function HeaderCtas({
       </NavLink>
       <SearchToggle />
       <CartToggle cart={cart} />
+      <HeaderMenuMobileToggle isOpen={isMobileMenuOpen} onToggle={onToggleMobileMenu} />
     </nav>
   );
 }
 
-function HeaderMenuMobileToggle() {
-  const { open } = useAside();
+function HeaderMenuMobileToggle({ isOpen, onToggle }: { isOpen: boolean, onToggle: () => void }) {
   return (
     <button
       className="header-menu-mobile-toggle reset"
-      onClick={() => open('mobile')}
+      onClick={onToggle}
       aria-label="Open Menu"
     >
-      <svg width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="20" height="1" fill="currentColor" />
-        <rect y="5" width="14" height="1" fill="currentColor" />
-        <rect y="11" width="20" height="1" fill="currentColor" />
-      </svg>
+      {isOpen ? (
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <line x1="1" y1="1" x2="19" y2="19" stroke="currentColor" strokeWidth="2" />
+          <line x1="19" y1="1" x2="1" y2="19" stroke="currentColor" strokeWidth="2" />
+        </svg>
+      ) : (
+        <svg width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="20" height="1" fill="currentColor" />
+          <rect y="5" width="14" height="1" fill="currentColor" />
+          <rect y="11" width="20" height="1" fill="currentColor" />
+        </svg>
+      )}
     </button>
   );
 }

@@ -96,65 +96,14 @@ export default function Homepage() {
     <div className="home">
       <Hero />
 
-      {/* SECTION 1.5: The Core Systems (3 Honeys Feature) */}
-      <section className="section-dark" style={{ borderBottom: 'var(--border-delicate)' }}>
-        <div className="container">
-          <span className="technical-label">CORE_SYSTEMS</span>
-          <h2 className="section-title">The Three Pillars.</h2>
+      {/* Flagship Product Category: Infused Honeys (The Three Pillars consolidated) */}
+      <FlagshipProductsSection productsPromise={data.recommendedProducts} />
 
-          <div className="core-systems-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'var(--space-8)', marginTop: 'var(--space-12)' }}>
+      {/* Tinctures Section */}
+      <CategoryProductsSection title="Liquid Tinctures" category="tinctures" productsPromise={data.recommendedProducts} theme="light" />
 
-            {/* System 01: Focus */}
-            <Link to="/products/focus-honey" className="system-card panel-technical" style={{ display: 'flex', flexDirection: 'column', textDecoration: 'none' }}>
-              <div className="system-image" style={{ aspectRatio: '1/1', overflow: 'hidden', borderBottom: 'var(--border-delicate)', margin: 'calc(var(--space-8) * -1) calc(var(--space-8) * -1) var(--space-8)' }}>
-                <img src={focusImg} alt="FOCUS" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'grayscale(1) contrast(1.1)', transition: 'var(--transition-liquid)' }} className="hover-grayscale-off" />
-              </div>
-              <span className="technical-label" style={{ color: 'var(--color-light)' }}>// SYSTEM_01</span>
-              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', color: 'var(--color-light)', margin: 'var(--space-2) 0' }}>FOCUS</h3>
-              <p style={{ color: 'var(--color-muted)', fontSize: '0.9rem', lineHeight: '1.6', marginBottom: 'var(--space-8)', flexGrow: 1 }}>
-                Deep work and flow state. LION'S MANE / HERICENE complex. Formulated for mental precision and sustained focus without the crash.
-              </p>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: 'var(--border-delicate)', paddingTop: 'var(--space-4)' }}>
-                <span className="technical-label">THE_OWL</span>
-                <span style={{ color: 'var(--color-light)', fontFamily: 'var(--font-mono)', fontSize: '0.8rem' }}>[ ACCESS &rarr; ]</span>
-              </div>
-            </Link>
-
-            {/* System 02: Primal */}
-            <Link to="/products/primal-honey" className="system-card panel-technical" style={{ display: 'flex', flexDirection: 'column', textDecoration: 'none' }}>
-              <div className="system-image" style={{ aspectRatio: '1/1', overflow: 'hidden', borderBottom: 'var(--border-delicate)', margin: 'calc(var(--space-8) * -1) calc(var(--space-8) * -1) var(--space-8)' }}>
-                <img src={primalImg} alt="PRIMAL" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'grayscale(1) contrast(1.1)', transition: 'var(--transition-liquid)' }} className="hover-grayscale-off" />
-              </div>
-              <span className="technical-label" style={{ color: 'var(--color-light)' }}>// SYSTEM_02</span>
-              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', color: 'var(--color-light)', margin: 'var(--space-2) 0' }}>PRIMAL</h3>
-              <p style={{ color: 'var(--color-muted)', fontSize: '0.9rem', lineHeight: '1.6', marginBottom: 'var(--space-8)', flexGrow: 1 }}>
-                Sustained energy and athletic output. CORDYCEPS / MILITARIN complex. The ultimate fuel for your physical quest.
-              </p>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: 'var(--border-delicate)', paddingTop: 'var(--space-4)' }}>
-                <span className="technical-label">THE_GREAT_BEAR</span>
-                <span style={{ color: 'var(--color-light)', fontFamily: 'var(--font-mono)', fontSize: '0.8rem' }}>[ ACCESS &rarr; ]</span>
-              </div>
-            </Link>
-
-            {/* System 03: Rest */}
-            <Link to="/products/rest-honey" className="system-card panel-technical" style={{ display: 'flex', flexDirection: 'column', textDecoration: 'none' }}>
-              <div className="system-image" style={{ aspectRatio: '1/1', overflow: 'hidden', borderBottom: 'var(--border-delicate)', margin: 'calc(var(--space-8) * -1) calc(var(--space-8) * -1) var(--space-8)' }}>
-                <img src={restImg} alt="REST" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'grayscale(1) contrast(1.1)', transition: 'var(--transition-liquid)' }} className="hover-grayscale-off" />
-              </div>
-              <span className="technical-label" style={{ color: 'var(--color-light)' }}>// SYSTEM_03</span>
-              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', color: 'var(--color-light)', margin: 'var(--space-2) 0' }}>REST</h3>
-              <p style={{ color: 'var(--color-muted)', fontSize: '0.9rem', lineHeight: '1.6', marginBottom: 'var(--space-8)', flexGrow: 1 }}>
-                Nervous system mute and deep REM. REISHI / TRITERPENE complex. Designed for deep, restorative sleep and recovery.
-              </p>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: 'var(--border-delicate)', paddingTop: 'var(--space-4)' }}>
-                <span className="technical-label">THE_SLUMBERING_BEAR</span>
-                <span style={{ color: 'var(--color-light)', fontFamily: 'var(--font-mono)', fontSize: '0.8rem' }}>[ ACCESS &rarr; ]</span>
-              </div>
-            </Link>
-
-          </div>
-        </div>
-      </section>
+      {/* Gummies Section */}
+      <CategoryProductsSection title="Mushroom Gummies" category="gummies" productsPromise={data.recommendedProducts} theme="light" />
 
       {/* SECTION 2: Mushroom Synergy & Biological Components */}
       <section id="synergy" className="section-dark" style={{ position: 'relative', padding: 'var(--space-24) 0' }}>
@@ -350,9 +299,7 @@ export default function Homepage() {
         </div>
       </section>
 
-      <div className="container" style={{ padding: 'var(--space-16) 0' }}>
-        <RecommendedProducts products={data.recommendedProducts} />
-      </div>
+      {/* End Homepage Content */}
     </div>
   );
 }
@@ -381,56 +328,30 @@ function FeaturedCollection({
   );
 }
 
-function RecommendedProducts({
-  products,
-}: {
-  products: Promise<{
-    all: RecommendedProductFragment[];
-    honeys: RecommendedProductFragment[];
-    tinctures: RecommendedProductFragment[];
-    gummies: RecommendedProductFragment[];
-  } | null>;
+function CategoryProductsSection({ title, productsPromise, category, theme = 'dark' }: {
+  title: string;
+  category: 'honeys' | 'tinctures' | 'gummies';
+  productsPromise: Promise<{ honeys: RecommendedProductFragment[], tinctures: RecommendedProductFragment[], gummies: RecommendedProductFragment[] } | null>;
+  theme?: 'light' | 'dark';
 }) {
-  const [activeCategory, setActiveCategory] = useState<'honeys' | 'tinctures' | 'gummies'>('honeys');
+  const isLight = theme === 'light';
+  const bgColor = isLight ? 'var(--color-light)' : 'transparent';
+  const textColor = isLight ? 'var(--color-dark)' : 'var(--color-light)';
+  const labelColor = isLight ? 'var(--color-dark)' : 'var(--color-muted)';
 
   return (
-    <div id="apothecary" className="recommended-products">
+    <div className={`category-section ${isLight ? 'section-light' : 'section-dark'}`} style={{ backgroundColor: bgColor, color: textColor, padding: 'var(--space-16) 0', borderBottom: isLight ? '1px solid rgba(0,0,0,0.1)' : 'var(--border-delicate)' }}>
       <div className="container">
-        <div className="section-header" style={{ textAlign: 'center', marginBottom: 'var(--space-16)' }}>
-          <span className="technical-label">SYSTEM_CATEGORIES</span>
-          <h2 className="section-title" style={{ fontSize: '3rem' }}>Select Your Delivery System.</h2>
-          <div className="category-toggle" style={{ display: 'flex', justifyContent: 'center', gap: 'var(--space-8)', marginTop: 'var(--space-8)' }}>
-            {(['honeys', 'tinctures', 'gummies'] as const).map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                className={`category-btn ${activeCategory === cat ? 'active' : ''}`}
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  color: activeCategory === cat ? 'white' : 'var(--color-muted)',
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: '0.8rem',
-                  letterSpacing: '0.2em',
-                  textTransform: 'uppercase',
-                  cursor: 'pointer',
-                  padding: 'var(--space-2) 0',
-                  borderBottom: activeCategory === cat ? '2px solid white' : '2px solid transparent',
-                  transition: 'var(--transition-standard)'
-                }}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
+        <div className="section-header" style={{ marginBottom: 'var(--space-12)' }}>
+          <span className="technical-label" style={{ color: labelColor }}>SYSTEM_CATEGORY</span>
+          <h2 className="section-title" style={{ fontSize: '3rem', color: textColor }}>{title}</h2>
         </div>
-
-        <Suspense fallback={<div style={{ textAlign: 'center', color: 'var(--color-muted)', padding: 'var(--space-20)' }}>CALIBRATING_SENSORS...</div>}>
-          <Await resolve={products}>
+        <Suspense fallback={<div style={{ color: labelColor }}>CALIBRATING_SENSORS...</div>}>
+          <Await resolve={productsPromise}>
             {(response) => {
               if (!response) return null;
-              const displayProducts = response[activeCategory];
-
+              const displayProducts = response[category];
+              if (!displayProducts || displayProducts.length === 0) return null;
               return (
                 <div className="category-showcase-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 'var(--space-8)' }}>
                   {displayProducts.map((product) => (
@@ -441,14 +362,91 @@ function RecommendedProducts({
             }}
           </Await>
         </Suspense>
-
-        <div style={{ textAlign: 'center', marginTop: 'var(--space-16)' }}>
-          <Link to="/collections/all" className="technical-label" style={{ color: 'white', textDecoration: 'none', border: '1px solid rgba(255,255,255,0.1)', padding: 'var(--space-4) var(--space-8)', display: 'inline-block' }}>
-            [ VIEW_ALL_PRODUCTS // FULL_INVENTORY ]
-          </Link>
-        </div>
       </div>
     </div>
+  );
+}
+
+function FlagshipProductsSection({ productsPromise }: {
+  productsPromise: Promise<{ honeys: RecommendedProductFragment[] } | null>;
+}) {
+  const [activeTab, setActiveTab] = useState<'focus' | 'primal' | 'rest'>('focus');
+
+  const systems = [
+    {
+      id: 'focus',
+      title: 'FOCUS',
+      image: focusImg,
+      subtitle: "Deep work and flow state. LION'S MANE / HERICENE complex.",
+      description: "Formulated for mental precision and sustained focus without the crash.",
+      link: "/products/focus-honey"
+    },
+    {
+      id: 'primal',
+      title: 'PRIMAL',
+      image: primalImg,
+      subtitle: "Sustained energy and athletic output. CORDYCEPS / MILITARIN complex.",
+      description: "The ultimate fuel for your physical quest.",
+      link: "/products/primal-honey"
+    },
+    {
+      id: 'rest',
+      title: 'REST',
+      image: restImg,
+      subtitle: "Nervous system mute and deep REM. REISHI / TRITERPENE complex.",
+      description: "Designed for deep, restorative sleep and recovery.",
+      link: "/products/rest-honey"
+    }
+  ];
+
+  return (
+    <>
+      <div className="hero-to-flagship-separator"></div>
+      <section className="section-dark" style={{ borderBottom: 'var(--border-delicate)', padding: 'var(--space-8) 0 var(--space-24) 0' }}>
+        <div className="container" style={{ maxWidth: '1400px' }}>
+          <div style={{ textAlign: 'center' }}>
+            <span className="technical-label" style={{ color: 'var(--color-muted)' }}>FLAGSHIP_PRODUCT</span>
+            <h2 className="section-title" style={{ fontSize: '3rem', color: 'var(--color-light)' }}>Infused Woodland Honey.</h2>
+          </div>
+
+          <div className="flagship-accordion">
+            {systems.map((system) => {
+              const isActive = activeTab === system.id;
+              return (
+                <div
+                  key={system.id}
+                  className={`flagship-card ${isActive ? 'active' : ''}`}
+                  onClick={() => setActiveTab(system.id as any)}
+                >
+                  <div className="flagship-card-bg">
+                    <img src={system.image} alt={`${system.title} Honey`} />
+                  </div>
+
+                  <div className="flagship-card-title-vertical">
+                    {system.title}
+                  </div>
+
+                  <div className="flagship-card-content">
+                    <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '3rem', color: 'var(--color-light)', margin: '0 0 var(--space-2) 0' }}>{system.title}</h3>
+                    <p style={{ color: '#ecb613', fontFamily: 'var(--font-mono)', fontSize: '0.8rem', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 'var(--space-4)' }}>
+                      {system.subtitle}
+                    </p>
+                    <p style={{ color: 'var(--color-muted)', fontSize: '1.1rem', lineHeight: '1.6', maxWidth: '90%', marginBottom: 'var(--space-8)' }}>
+                      {system.description}
+                    </p>
+                    <div>
+                      <Link to={system.link} className="btn-minimal-white" style={{ fontFamily: 'var(--font-mono)' }}>
+                        [ ACCESS &rarr; ]
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+    </>
   );
 }
 
